@@ -1,11 +1,4 @@
-import {
-    createBot,
-    Intents,
-    startBot,
-    createGuildApplicationCommand,
-    CreateSlashApplicationCommand,
-    InteractionResponseTypes,
-} from "./deps.ts"
+import { createBot, Intents, startBot, CreateSlashApplicationCommand, InteractionResponseTypes } from "./deps.ts"
 import { Secret } from "./secret.ts"
 
 const bot = createBot({
@@ -23,9 +16,8 @@ const nekoCommand: CreateSlashApplicationCommand = {
     description: "にゃーんと返します",
 }
 
-bot.activeGuildIds.forEach(async (id) => {
-    await createGuildApplicationCommand(bot, nekoCommand, id)
-})
+await bot.helpers.createGuildApplicationCommand(nekoCommand, Secret.GUILD_ID)
+await bot.helpers.upsertGuildApplicationCommands(Secret.GUILD_ID, [nekoCommand])
 
 bot.events.messageCreate = (b, message) => {
     if (message.content === "!neko") {
